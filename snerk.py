@@ -162,7 +162,7 @@ def get_url_titles(urls):
              r'economist\.com',
              r'wikipediareview\.com',
              r'[\w.]*craigslist\.org',
-             r'washingtonpost\.org',]
+             r'washingtonpost\.com',]
     http_title_find_re = re.compile(r'https?://(www\.|global\.)?(%s)' % '|'.join(sites), re.I|re.U)
     youtube_re = re.compile(r'(youtube\.com|youtu\.be)', re.I|re.U)
     for url in urls:
