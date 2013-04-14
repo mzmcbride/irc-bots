@@ -332,7 +332,7 @@ class Snitch(EternalClient):
                 diff['summary'] = '[none]'
             url = urlparse.urlparse(diff['url'])
             fixed_netloc = CHANNEL_URLS.get(url.netloc.strip('.org'),
-                                            url.netloc)+'.org'
+                                            url.netloc.strip('.org'))+'.org'
             fixed_url = diff['url'].replace(url.netloc, fixed_netloc)
             final_url = fixed_url.replace('http://', 'https://')
             self.msg(rule.channel,
