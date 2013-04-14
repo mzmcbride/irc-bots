@@ -37,6 +37,7 @@ CHANNEL_URLS = {'wikidata.wikipedia': 'www.wikidata',
                 'donate.wikimedia.org': 'donate.wikimedia',
                 'outreach.wikipedia': 'outreach.wikimedia',
                 'wikimania2013wiki': 'wikimania2013.wikimedia',
+                'wikimediafoundation.org': 'wikimediafoundation',
                 }
 
 
