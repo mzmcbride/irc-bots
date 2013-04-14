@@ -59,7 +59,6 @@ DIFF_RE = re.compile(r'''
     ?(?P<summary>.*)             # edit summary
 ''', re.VERBOSE)
 
-
 class EternalClient(irc.IRCClient):
 
     def __init__(self):
@@ -81,7 +80,6 @@ class EternalClient(irc.IRCClient):
     def irc_PONG(self, prefix, params):
         log.msg('%s received ping from %s'
                 % (self.nickname, params[1]))
-
 
 class Snatch(EternalClient):
     realname = 'snerk'
@@ -176,7 +174,6 @@ class Snatch(EternalClient):
         self.factory.stopTrying()
         self.transport.loseConnection()
 
-
 class Snitch(EternalClient):
     realname = 'snerk'
     nickname = 'snitch'
@@ -221,7 +218,8 @@ class Snitch(EternalClient):
         rule_type = params[1]
 
         if rule_type not in ('summary', 'user', 'page', 'log', 'all'):
-            self.msg(channel, 'Type must be one of: all, user, summary, page, log.')
+            self.msg(channel,
+                     'Type must be one of: all, user, summary, page, log.')
             return
 
         if rule_type == 'all':
@@ -245,8 +243,12 @@ class Snitch(EternalClient):
         if remove:
             if exists:
                 self.cursor.execute(
-                    'DELETE FROM rules WHERE \
-                    wiki=? AND type=? AND pattern=? AND channel=? AND ignore=?',
+                    'DELETE FROM rules \
+                     WHERE wiki=? \
+                     AND type=? \
+                     AND pattern=? \
+                     AND channel=? \
+                     AND ignore=?',
                     (wiki, rule_type, pattern, channel, ignore))
                 self.msg(channel, 'Rule deleted.')
             else:
@@ -331,19 +333,19 @@ class Snitch(EternalClient):
             url = urlparse.urlparse(diff['url'])
             fixed_netloc = CHANNEL_URLS.get(url.netloc.strip('.org'),
                                             url.netloc)+'.org'
-            final_url = diff['url'].replace(url.netloc, fixed_netloc)
+            fixed_url = diff['url'].replace(url.netloc, fixed_netloc)
+            final_url = fixed_url.replace('http://', 'https://')
             self.msg(rule.channel,
                      '; '.join(('[[%s]]' % diff['page'],
                                 diff['user'],
                                 diff['summary'],
-                                diff['url'].replace('http://', 'https://'))))
+                                final_url)))
         else:
             base_url = CHANNEL_URLS.get(rule.wiki.strip('.org'),
                                         rule.wiki.strip('.org'))
             self.msg(rule.channel,
                      '%s %s; https://%s.org/wiki/Special:Log/%s'
                      % (diff['user'], diff['summary'], base_url, diff['log']))
-
 
 class SnatchAndSnitch(protocol.ReconnectingClientFactory):
 
@@ -366,7 +368,6 @@ class SnatchAndSnitch(protocol.ReconnectingClientFactory):
             cls.connection.commit()
             cls.connection.close()
             reactor.stop()
-
 
 def main():
     log.startLogging(open(settings.directory + 'snitch.log', 'w'))
