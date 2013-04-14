@@ -39,6 +39,7 @@ CHANNEL_URLS = {'wikidata.wikipedia': 'www.wikidata',
                 'wikimania2013wiki': 'wikimania2013.wikimedia',
                 }
 
+
 def strip_formatting(message):
     """Strips colors and formatting from IRC messages"""
     return COLOR_RE.sub('', message)
@@ -74,11 +75,12 @@ class EternalClient(irc.IRCClient):
     def pingServer(self):
         self.sendLine('PING %s' % self.transport.connector.host)
         log.msg('%s sent ping to %s'
-            % (self.nickname, self.transport.connector.host))
+                % (self.nickname, self.transport.connector.host))
 
     def irc_PONG(self, prefix, params):
         log.msg('%s received ping from %s'
-            % (self.nickname, params[1]))
+                % (self.nickname, params[1]))
+
 
 class Snatch(EternalClient):
     realname = 'snerk'
@@ -127,7 +129,7 @@ class Snatch(EternalClient):
         for rule in rule_list:
             if rule.channel in ignore:
                 continue
-            pattern = re.compile(r'^%s$' % rule.pattern, re.I|re.U)
+            pattern = re.compile(r'^%s$' % rule.pattern, re.I | re.U)
             if rule.type == 'all':
                 pass
             elif rule.type == 'summary':
@@ -135,7 +137,7 @@ class Snatch(EternalClient):
                     if not pattern.search(diff['summary']):
                         continue
                 else:
-                    if not pattern.search( diff['summary']):
+                    if not pattern.search(diff['summary']):
                         continue
             elif rule.type == 'user':
                 if not pattern.search(diff['user']):
@@ -212,7 +214,7 @@ class Snitch(EternalClient):
     def updateRules(self, channel, params, ignore=False, remove=False):
         if len(params) < 2:
             self.msg(channel,
-                '!(un)stalk wiki (page|user|summary|log|all) [pattern]')
+                     '!(un)stalk wiki (page|user|summary|log|all) [pattern]')
             return
         wiki = params[0]
         rule_type = params[1]
@@ -261,7 +263,7 @@ class Snitch(EternalClient):
 
     def privmsg(self, sender, channel, message):
         if not sender:
-            return # Twisted sucks
+            return  # Twisted sucks
         if channel == self.nickname:
             pass
         elif message.startswith('!'):
@@ -303,7 +305,7 @@ class Snitch(EternalClient):
             self.part(channel)
         elif action == 'help':
             self.msg(channel,
-                '!(stalk|ignore|unstalk|unignore|list|join|part|quit)')
+                     '!(stalk|ignore|unstalk|unignore|list|join|part|quit)')
         elif action == 'quit':
             if hostmask in settings.authorized_users:
                 log.msg('Quitting')
@@ -325,12 +327,12 @@ class Snitch(EternalClient):
         if 'page' in diff:
             if not diff['summary']:
                 diff['summary'] = '[none]'
-            self.msg(rule.channel, '; '.join (('[[%s]]'
-                % diff['page'], diff['user'], diff['summary'], diff['url'].replace('http://', 'https://'))))
+            self.msg(rule.channel, '; '.join(('[[%s]]'
+                     % diff['page'], diff['user'], diff['summary'], diff['url'].replace('http://', 'https://'))))
         else:
             base_url = CHANNEL_URLS.get(rule.wiki.strip('.org'), rule.wiki.strip('.org'))
             self.msg(rule.channel, '%s %s; https://%s.org/wiki/Special:Log/%s'
-                % (diff['user'], diff['summary'], base_url, diff['log']))
+                     % (diff['user'], diff['summary'], base_url, diff['log']))
 
 
 class SnatchAndSnitch(protocol.ReconnectingClientFactory):
@@ -357,7 +359,7 @@ class SnatchAndSnitch(protocol.ReconnectingClientFactory):
 
 
 def main():
-    log.startLogging(open(settings.directory+'snitch.log', 'w'))
+    log.startLogging(open(settings.directory + 'snitch.log', 'w'))
     snatch = SnatchAndSnitch()
     snatch.protocol = Snatch
     snitch = SnatchAndSnitch()
