@@ -5,6 +5,7 @@ import collections
 import re
 import sqlite3
 import sre_constants
+import urlparse
 
 from twisted.internet import protocol, reactor, task
 from twisted.python import log
@@ -39,7 +40,6 @@ CHANNEL_URLS = {'wikidata.wikipedia': 'www.wikidata',
                 'wikimania2013wiki': 'wikimania2013.wikimedia',
                 'wikimediafoundation.org': 'wikimediafoundation',
                 }
-
 
 def strip_formatting(message):
     """Strips colors and formatting from IRC messages"""
@@ -328,11 +328,20 @@ class Snitch(EternalClient):
         if 'page' in diff:
             if not diff['summary']:
                 diff['summary'] = '[none]'
-            self.msg(rule.channel, '; '.join(('[[%s]]'
-                     % diff['page'], diff['user'], diff['summary'], diff['url'].replace('http://', 'https://'))))
+            url = urlparse.urlparse(diff['url'])
+            fixed_netloc = CHANNEL_URLS.get(url.netloc.strip('.org'),
+                                            url.netloc)+'.org'
+            final_url = diff['url'].replace(url.netloc, fixed_netloc)
+            self.msg(rule.channel,
+                     '; '.join(('[[%s]]' % diff['page'],
+                                diff['user'],
+                                diff['summary'],
+                                diff['url'].replace('http://', 'https://'))))
         else:
-            base_url = CHANNEL_URLS.get(rule.wiki.strip('.org'), rule.wiki.strip('.org'))
-            self.msg(rule.channel, '%s %s; https://%s.org/wiki/Special:Log/%s'
+            base_url = CHANNEL_URLS.get(rule.wiki.strip('.org'),
+                                        rule.wiki.strip('.org'))
+            self.msg(rule.channel,
+                     '%s %s; https://%s.org/wiki/Special:Log/%s'
                      % (diff['user'], diff['summary'], base_url, diff['log']))
 
 
