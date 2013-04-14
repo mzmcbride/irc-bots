@@ -31,6 +31,13 @@ Rule = collections.namedtuple('Rule', 'wiki, type, pattern, channel, ignore')
 
 COLOR_RE = re.compile(r'(?:\x02|\x03(?:\d{1,2}(?:,\d{1,2})?)?)')
 
+CHANNEL_URLS = {'wikidata.wikipedia': 'www.wikidata',
+                'mediawiki.wikipedia': 'www.mediawiki',
+                'species.wikipedia': 'species.wikimedia',
+                'donate.wikimedia.org': 'donate.wikimedia',
+                'outreach.wikipedia': 'outreach.wikimedia',
+                'wikimania2013wiki': 'wikimania2013.wikimedia',
+                }
 
 def strip_formatting(message):
     """Strips colors and formatting from IRC messages"""
@@ -321,8 +328,9 @@ class Snitch(EternalClient):
             self.msg(rule.channel, '; '.join (('[[%s]]'
                 % diff['page'], diff['user'], diff['summary'], diff['url'].replace('http://', 'https://'))))
         else:
+            base_url = CHANNEL_URLS.get(rule.wiki.strip('.org'), rule.wiki.strip('.org'))
             self.msg(rule.channel, '%s %s; https://%s.org/wiki/Special:Log/%s'
-                % (diff['user'], diff['summary'], rule.wiki.strip('.org'), diff['log']))
+                % (diff['user'], diff['summary'], base_url, diff['log']))
 
 
 class SnatchAndSnitch(protocol.ReconnectingClientFactory):
