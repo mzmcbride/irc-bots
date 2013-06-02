@@ -5,8 +5,8 @@ import collections
 import re
 import sqlite3
 import sre_constants
-import urlparse
 import time
+import urlparse
 
 from twisted.internet import protocol, reactor, task
 from twisted.python import log
@@ -169,7 +169,7 @@ class Snatch(EternalClient):
         channels = set('#%s' % row[0] for row in self.cursor.fetchall())
         for channel in (channels - self.channels):
             self.join(channel)
-            time.sleep(1)# Sleep to avoid being killed for a flood of joins
+            time.sleep(1)  # Sleep to avoid being killed for a flood of joins
         [self.part(channel) for channel in (self.channels - channels)]
 
     def quit(self):
@@ -297,11 +297,9 @@ class Snitch(EternalClient):
             [self.msg(channel, '%s; %s; %s' % (r.wiki, r.type, r.pattern))
                 for r in rules]
         elif action == 'join':
-            if re.search(r'(mj94)', params[0], re.I):
-                self.msg(channel, 'FUCK OFF.')
-            elif not params:
+            if not params:
                 self.msg(channel, '!join (channel)')
-            else:
+            elif hostmask in settings.authorized_users:
                 self.cursor.execute(
                     'INSERT OR IGNORE INTO channels VALUES (?)', (params[0],))
                 self.join(params[0])
