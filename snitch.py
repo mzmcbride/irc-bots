@@ -6,6 +6,7 @@ import re
 import sqlite3
 import sre_constants
 import urlparse
+import time
 
 from twisted.internet import protocol, reactor, task
 from twisted.python import log
@@ -166,7 +167,9 @@ class Snatch(EternalClient):
         self.cursor.execute(
             'SELECT wiki FROM rules')
         channels = set('#%s' % row[0] for row in self.cursor.fetchall())
-        [self.join(channel) for channel in (channels - self.channels)]
+        for channel in (channels - self.channels):
+            self.join(channel)
+            time.sleep(1)# Sleep to avoid being killed for a flood of joins
         [self.part(channel) for channel in (self.channels - channels)]
 
     def quit(self):
