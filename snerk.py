@@ -496,6 +496,10 @@ class snerkBot(irc.IRCClient):
             self.sendLine('TOPIC %s :No faggy shit.' % channel)
             return
 
+        elif re.search(r'^(thanks|thank you) %s|^%s.{0,3}(thanks|thank you)' % (self.nickname, self.nickname), msg, re.I|re.U):
+            self.msg(channel, "You're welcome, you sarcastic fuck.")
+            return
+
         if re.search(r'^%s' % self.nickname, msg, re.I|re.U):
             self.msg(channel, 'Pfft.')
             return
