@@ -413,7 +413,11 @@ class snerkBot(irc.IRCClient):
                 if not matches:
                     self.msg(user, 'No matches.')
                 elif len(matches) > 1:
-                    self.msg(user, 'Too many matches.')
+                    if len(matches) > 3:
+                        self.msg(user, 'Far too many matches.')
+                    else:
+                        for match in matches:
+                            self.msg(user, match)
                 else:
                     self.msg(target, matches[0])
             elif msg.startswith('#'):
