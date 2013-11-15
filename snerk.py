@@ -392,6 +392,30 @@ class snerkBot(irc.IRCClient):
                 target = primary_channel
                 nmsg = ' '.join(msg.split(' ')[1:])
                 self.describe(target, nmsg)
+            elif msg.startswith('ft'):
+                # ft robot
+                # ft the
+                # ft asdf
+                # ft emotionless
+                # ft How
+                # ft mini-grill
+                target = primary_channel
+                nmsg = ' '.join(msg.split(' ')[1:])
+                matches = []
+                for twat in twats:
+                    words = []
+                    for word in twat.split(' '):
+                        # Strip out punctuation and make it lowercase.
+                        clean_word = re.sub(r'[:;,.\'"?]', '', word.lower())
+                        words.append(clean_word)
+                    if re.sub(r'[:;,.\'"?]', '', nmsg.lower()) in words:
+                        matches.append(twat)
+                if not matches:
+                    self.msg(user, 'No matches.')
+                elif len(matches) > 1:
+                    self.msg(user, 'Too many matches.')
+                else:
+                    self.msg(target, matches[0])
             elif msg.startswith('#'):
                 target = msg.split(' ')[0]
                 verb = msg.split(' ')[1]
