@@ -399,16 +399,15 @@ class snerkBot(irc.IRCClient):
                 # ft emotionless
                 # ft How
                 # ft mini-grill
+                # ft time for
                 target = primary_channel
                 nmsg = ' '.join(msg.split(' ')[1:])
                 matches = []
                 for twat in twats:
-                    words = []
-                    for word in twat.split(' '):
-                        # Strip out punctuation and make it lowercase.
-                        clean_word = re.sub(r'[:;,.\'"?]', '', word.lower())
-                        words.append(clean_word)
-                    if re.sub(r'[:;,.\'"?]', '', nmsg.lower()) in words:
+                    # Normalize input.
+                    clean_twat = re.sub(r'[:;,.\'"?]', '', twat.lower())
+                    user_message = re.sub(r'[:;,.\'"?]', '', nmsg.lower())
+                    if user_message in clean_twat:
                         matches.append(twat)
                 if not matches:
                     self.msg(user, 'No matches.')
