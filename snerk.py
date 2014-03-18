@@ -407,7 +407,7 @@ class snerkBot(irc.IRCClient):
                 if not nmsg.strip():
                     for channel in [primary_channel, silly_channel]:
                         self.msg(channel, random.choice(twats))
-                        return
+                    return
                 for twat in twats:
                     # Normalize input.
                     clean_twat = re.sub(r'[:;,.\'"?]', '', twat.lower())
