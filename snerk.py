@@ -21,6 +21,7 @@ trusted = settings.trusted
 female = settings.female
 exempt = settings.exempt
 primary_channel = settings.primary_channel(__file__)
+silly_channel = settings.silly_channel(__file__)
 
 f = open(os.environ['HOME']+'/scripts/'+'mother.txt', 'r')
 motherly_phrases = f.read().strip('\n').split('\n')
@@ -403,6 +404,10 @@ class snerkBot(irc.IRCClient):
                 target = primary_channel
                 nmsg = ' '.join(msg.split(' ')[1:])
                 matches = []
+                if not nmsg.strip():
+                    for channel in [primary_channel, '#uncyclopedia']:
+                        self.msg(channel, random.choice(twats))
+                        return
                 for twat in twats:
                     # Normalize input.
                     clean_twat = re.sub(r'[:;,.\'"?]', '', twat.lower())
