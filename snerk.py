@@ -405,7 +405,7 @@ class snerkBot(irc.IRCClient):
                 nmsg = ' '.join(msg.split(' ')[1:])
                 matches = []
                 if not nmsg.strip():
-                    for channel in [primary_channel, '#uncyclopedia']:
+                    for channel in [primary_channel, silly_channel]:
                         self.msg(channel, random.choice(twats))
                         return
                 for twat in twats:
