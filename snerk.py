@@ -393,6 +393,15 @@ class snerkBot(irc.IRCClient):
                 target = primary_channel
                 nmsg = ' '.join(msg.split(' ')[1:])
                 self.describe(target, nmsg)
+            elif re.search(r'(^\s*!\s*twat\s*$|^\s*twat\s*!\s*$)', msg, re.I|re.U):
+                for channel in [primary_channel, silly_channel]:
+                    self.msg(channel, random.choice(twats))
+                return
+            elif (re.search(r'^\s*!\s*(mother|mom|madre|mama)\s*$', msg, re.I|re.U) or
+                  re.search(r'^\s*(mother|mom|madre|mama)\s*!\s*$', msg, re.I|re.U)):
+                for channel in [primary_channel, silly_channel]:
+                    self.msg(channel, random.choice(motherly_phrases))
+                return
             elif msg.startswith('ft'):
                 # ft robot
                 # ft the
@@ -457,11 +466,6 @@ class snerkBot(irc.IRCClient):
             self.msg(channel, 'The H stands for "heart."')
             return
 
-        elif (re.search(r'^\s*!\s*(mother|mom|madre|mama)\s*$', msg, re.I|re.U) or
-              re.search(r'^\s*(mother|mom|madre|mama)\s*!\s*$', msg, re.I|re.U)):
-            self.msg(channel, random.choice(motherly_phrases))
-            return
-
         elif (re.search(r'.*\byou know what they say\b.*', msg, re.I|re.U) or
               re.search(r'^\s*!\s*sayings?\s*$', msg, re.I|re.U) or
               re.search(r'^\s*sayings?\s*!\s*$', msg, re.I|re.U)):
@@ -470,10 +474,6 @@ class snerkBot(irc.IRCClient):
 
         elif re.search(r'(^\s*!\s*pencil\s*$|^\s*pencil\s*!\s*$)', msg, re.I|re.U):
             self.demonstrate_emphasis(channel)
-            return
-
-        elif re.search(r'(^\s*!\s*twat\s*$|^\s*twat\s*!\s*$)', msg, re.I|re.U):
-            self.msg(channel, random.choice(twats))
             return
 
         elif re.search(r'^(\s*:\s*-?\s*(\||I)+\s*|\s*(\||I)+\s*-?\s*:\s*)', msg, re.I|re.U):
