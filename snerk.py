@@ -155,7 +155,6 @@ def get_url_titles(urls):
              r'youtube\.com',
              r'youtu\.be',
              r'xkcd\.com',
-             r'slate\.com',
              r'nytimes\.com',
              r'lists\.wikimedia\.org',
              r'vimeo\.com',
@@ -171,7 +170,11 @@ def get_url_titles(urls):
         if http_title_find_re.search(url):
             if youtube_re.search(url):
                 video_id = get_video_id(url)
-                title_tag = re.search(r'<title type=\'text\'>(.+)</title>', urllib.urlopen('http://gdata.youtube.com/feeds/api/videos/'+video_id).read(), re.DOTALL|re.I)
+                youtube_api = 'http://gdata.youtube.com/feeds/api/videos/'
+                youtube_contents = urllib.urlopen(youtube_api+video_id).read()
+                title_tag = re.search(r'<title type=\'text\'>(.+)</title>',
+                                      youtube_contents,
+                                      re.DOTALL|re.I)
                 title_tag_text = title_tag.group(1)
             else:
                 response = urllib.urlopen(url).read()
