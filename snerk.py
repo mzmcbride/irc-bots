@@ -180,6 +180,7 @@ def get_url_titles(urls):
                 response = urllib.urlopen(url).read()
                 soup = BeautifulSoup.BeautifulSoup(response)
                 title_tag_text = soup.html.head.title.string
+            title_tag_text = title_tag_text.encode('utf-8')
             try:
                 title_tag_text = title_tag_text.decode('utf-8')
             except UnicodeDecodeError:
