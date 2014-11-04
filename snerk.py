@@ -180,16 +180,19 @@ def get_url_titles(urls):
                 response = urllib.urlopen(url).read()
                 soup = BeautifulSoup.BeautifulSoup(response)
                 title_tag_text = soup.html.head.title.string
-            title_tag_text = title_tag_text.encode('utf-8')
+            try:
+                title_tag_text = title_tag_text.encode('utf-8')
+            except UnicodeDecodeError:
+                pass
             try:
                 title_tag_text = title_tag_text.decode('utf-8')
             except UnicodeDecodeError:
-                title_tag_text = title_tag_text
+                pass
             title_tag_text_clean = unescape(re.sub(r'\s+', ' ', title_tag_text).strip())
             try:
                 title_tag_text_clean = title_tag_text_clean.encode('utf-8')
             except UnicodeDecodeError:
-                title_tag_text_clean = title_tag_text_clean
+                pass
             url_titles.append(title_tag_text_clean)
     if url_titles:
         return url_titles
