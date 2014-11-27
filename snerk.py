@@ -166,6 +166,7 @@ def get_url_titles(urls):
              r'phabricator\.wikimedia\.org',]
     http_title_find_re = re.compile(r'https?://(www\.|global\.)?(%s)' % '|'.join(sites), re.I|re.U)
     youtube_re = re.compile(r'(youtube\.com|youtu\.be)', re.I|re.U)
+    phabricator_re = re.compile(r'phabricator\.wikimedia\.org', re.I|re.U)
     for url in urls:
         url = url.lstrip('^')
         if http_title_find_re.search(url):
@@ -178,6 +179,11 @@ def get_url_titles(urls):
                                       re.DOTALL|re.I)
                 title_tag_text = title_tag.group(1)
             else:
+                if phabricator_re.search(url):
+                    if re.search(r'phabricator\.wikimedia\.org/[DMPT]\d+', url, re.U):
+                        pass
+                    else:
+                        continue
                 response = urllib.urlopen(url).read()
                 soup = BeautifulSoup.BeautifulSoup(response)
                 title_tag_text = soup.html.head.title.string
