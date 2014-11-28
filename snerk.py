@@ -151,19 +151,19 @@ def get_url_titles(urls):
         return re.sub("&#?\w+;", fixup, text)
 
     url_titles = []
-    sites = [r'bugzilla\.wikimedia\.org',
+    sites = [
+             r'(bugzilla|phabricator|lists)\.wikimedia\.org',
              r'youtube\.com',
              r'youtu\.be',
              r'xkcd\.com',
              r'nytimes\.com',
-             r'lists\.wikimedia\.org',
              r'vimeo\.com',
-             r'bbc\.co\.uk',
+             r'bbc(\.com|\.co\.uk)',
              r'economist\.com',
              r'wikipediareview\.com',
              r'[\w.]*craigslist\.org',
              r'washingtonpost\.com',
-             r'phabricator\.wikimedia\.org',]
+            ]
     http_title_find_re = re.compile(r'https?://(www\.|global\.)?(%s)' % '|'.join(sites), re.I|re.U)
     youtube_re = re.compile(r'(youtube\.com|youtu\.be)', re.I|re.U)
     phabricator_re = re.compile(r'phabricator\.wikimedia\.org', re.I|re.U)
