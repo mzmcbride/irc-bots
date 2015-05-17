@@ -178,7 +178,7 @@ def get_url_titles(urls):
                 try:
                     title_tag_text = youtube_parsed['title'][0]
                 except KeyError:
-                    pass
+                    continue
             else:
                 if phabricator_re.search(url):
                     if re.search(r'phabricator\.wikimedia\.org/[DMPT]\d+', url, re.U):
