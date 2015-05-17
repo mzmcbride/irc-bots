@@ -172,7 +172,7 @@ def get_url_titles(urls):
         if http_title_find_re.search(url):
             if youtube_re.search(url):
                 video_id = get_video_id(url)
-                youtube_api = 'https://youtube.com/get_video_info?video_id='
+                youtube_api = 'https://www.youtube.com/get_video_info?video_id='
                 youtube_contents = urllib.urlopen(youtube_api+video_id).read()
                 youtube_parsed = urlparse.parse_qs(youtube_contents)
                 title_tag_text = youtube_parsed['title'][0]
