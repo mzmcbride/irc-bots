@@ -173,12 +173,22 @@ def get_url_titles(urls):
             if youtube_re.search(url):
                 video_id = get_video_id(url)
                 youtube_api = 'https://www.youtube.com/get_video_info?video_id='
-                youtube_contents = urllib.urlopen(youtube_api+video_id).read()
-                youtube_parsed = urlparse.parse_qs(youtube_contents)
+                youtube_regular = 'https://www.youtube.com/watch?v='
+                youtube_contents_api = urllib.urlopen(youtube_api+video_id).read()
+                youtube_parsed = urlparse.parse_qs(youtube_contents_api)
                 try:
                     title_tag_text = youtube_parsed['title'][0]
                 except KeyError:
-                    continue
+                    try:
+                        youtube_contents_regular = urllib.urlopen(youtube_regular+video_id).read()
+                        meta_title_tag = re.search(
+                            r'<meta name="title" content="(.+?)">',
+                            youtube_contents_regular,
+                            re.DOTALL
+                        )
+                        title_tag_text = meta_title_tag.group(1)
+                    except:
+                        continue
             else:
                 if phabricator_re.search(url):
                     if re.search(r'phabricator\.wikimedia\.org/[DMPT]\d+', url, re.U):
