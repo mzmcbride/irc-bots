@@ -152,7 +152,7 @@ def get_url_titles(urls):
 
     url_titles = []
     sites = [
-             r'(bugzilla|phabricator|lists)\.wikimedia\.org',
+             r'(((old|static)-)?bugzilla|phabricator|lists)\.wikimedia\.org',
              r'youtube\.com',
              r'youtu\.be',
              r'xkcd\.com',
