@@ -35,6 +35,10 @@ f = open(os.environ['HOME']+'/scripts/'+'sayings.txt', 'r')
 sayings = f.read().strip('\n').split('\n')
 f.close()
 
+f = open(os.environ['HOME']+'/scripts/'+'logs.txt', 'r')
+logimages = f.read().strip('\n').split('\n')
+f.close()
+
 def find_urls(msg):
     # This function should return a list of URLs.
     # This function only finds URLs, it does not encode them or do title lookups
@@ -495,6 +499,11 @@ class snerkBot(irc.IRCClient):
               re.search(r'^\s*!\s*sayings?\s*$', msg, re.I|re.U) or
               re.search(r'^\s*sayings?\s*!\s*$', msg, re.I|re.U)):
             self.msg(channel, random.choice(sayings))
+            return
+
+        elif (re.search(r'^\s*!\s*logs?\s*$', msg, re.I|re.U) or
+              re.search(r'^\s*logs?\s*!\s*$', msg, re.I|re.U)):
+            self.msg(channel, random.choice(logimages))
             return
 
         elif re.search(r'(^\s*!\s*(pencil|\xe2\x9c\x8e|\xe2\x9c\x8f|\xe2\x9c\x90)\s*$|^\s*(pencil|\xe2\x9c\x8e|\xe2\x9c\x8f|\xe2\x9c\x90)\s*!\s*$)', msg, re.I|re.U):
