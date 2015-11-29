@@ -501,8 +501,8 @@ class snerkBot(irc.IRCClient):
             self.msg(channel, random.choice(sayings))
             return
 
-        elif (re.search(r'^\s*!\s*logs?\s*$', msg, re.I|re.U) or
-              re.search(r'^\s*logs?\s*!\s*$', msg, re.I|re.U)):
+        elif (re.search(r'.*\b!logs?\b.*', msg, re.I|re.U) or
+              re.search(r'.*\blogs?!\b.*', msg, re.I|re.U)):
             self.msg(channel, random.choice(logimages))
             return
 
