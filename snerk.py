@@ -501,9 +501,8 @@ class snerkBot(irc.IRCClient):
             self.msg(channel, random.choice(sayings))
             return
 
-        elif re.search(r'(?<=\W)!logs?(?=\W)|(?<=\W)logs?!(?=\W)', msg, re.I|re.U):
+        elif msg.lower().find('!logs') != -1:
             self.msg(channel, random.choice(logimages))
-            return
 
         elif re.search(r'(^\s*!\s*(pencil|\xe2\x9c\x8e|\xe2\x9c\x8f|\xe2\x9c\x90)\s*$|^\s*(pencil|\xe2\x9c\x8e|\xe2\x9c\x8f|\xe2\x9c\x90)\s*!\s*$)', msg, re.I|re.U):
             self.demonstrate_emphasis(channel)
@@ -568,6 +567,8 @@ class snerkBot(irc.IRCClient):
         if re.search(r'^%s' % self.nickname, msg, re.I|re.U):
             self.msg(channel, 'Pfft.')
             return
+
+        return
 
     def action(self, user, channel, msg):
         hostmask = user.split('@', 1)[1]
