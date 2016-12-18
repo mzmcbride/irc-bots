@@ -39,6 +39,11 @@ f = open(os.environ['HOME']+'/scripts/'+'logs.txt', 'r')
 logimages = f.read().strip('\n').split('\n')
 f.close()
 
+f = open(os.environ['HOME']+'/scripts/'+'captions.txt', 'r')
+captions = f.read().strip('\n').split('\n')
+f.close()
+# using "universal new yorker captions"
+
 def find_urls(msg):
     # This function should return a list of URLs.
     # This function only finds URLs, it does not encode them or do title lookups
@@ -503,6 +508,11 @@ class snerkBot(irc.IRCClient):
 
         elif msg.lower().find('!logs') != -1:
             self.msg(channel, random.choice(logimages))
+            
+        elif (re.search(r'.*\bwho is max\b.*', msg, re.I|re.U) or
+              re.search(r'.*\bwho\'s max\b.*', msg, re.I|re.U)):
+            self.msg(channel, random.choice(captions))
+            return
 
         elif re.search(r'(^\s*!\s*(pencil|\xe2\x9c\x8e|\xe2\x9c\x8f|\xe2\x9c\x90)\s*$|^\s*(pencil|\xe2\x9c\x8e|\xe2\x9c\x8f|\xe2\x9c\x90)\s*!\s*$)', msg, re.I|re.U):
             self.demonstrate_emphasis(channel)
