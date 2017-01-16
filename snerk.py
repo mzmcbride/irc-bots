@@ -200,7 +200,7 @@ def get_url_titles(urls):
                         continue
             else:
                 if phabricator_re.search(url):
-                    if re.search(r'phabricator\.wikimedia\.org/[DMPT]\d+', url, re.U):
+                    if re.search(r'phabricator\.wikimedia\.org/[DMPTU]\d+', url, re.U):
                         pass
                     else:
                         continue
