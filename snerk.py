@@ -8,8 +8,8 @@ import subprocess as sub
 import urllib
 import urlparse
 import htmlentitydefs
-import BeautifulSoup
 
+from bs4 import BeautifulSoup
 from twisted.words.protocols import irc
 from twisted.internet import reactor, protocol, task
 
@@ -205,7 +205,7 @@ def get_url_titles(urls):
                     else:
                         continue
                 response = urllib.urlopen(url).read()
-                soup = BeautifulSoup.BeautifulSoup(response)
+                soup = BeautifulSoup(response, 'html.parser')
                 title_tag_text = soup.html.head.title.string
             try:
                 title_tag_text = title_tag_text.encode('utf-8')
@@ -274,21 +274,20 @@ def get_twit_twats(urls):
             # https://twitter.com/twatapotamus
             # https://twitter.com/#!/jemmabetts
             # https://twitter.com/Dominic_MP/status/211174413805174784
+            # https://twitter.com/drewtoothpaste/status/313418036218585088
             page_contents = urllib.urlopen(url).read()
-            soup = BeautifulSoup.BeautifulSoup(page_contents)
+            soup = BeautifulSoup(page_contents, 'html.parser')
             target_text = soup.find('span', 'entry-content')
             if not target_text:
                 target_text = soup.find('p', 'js-tweet-text')
             if not target_text:
                 # Fuck it, continue
                 continue
-            target_text = target_text.renderContents()
+            target_text = target_text.get_text()
             target_text_clean = re.sub(r'\s+', ' ', target_text).strip()
-            target_text_cleaner = BeautifulSoup.BeautifulSoup(target_text_clean.decode('utf-8')).findAll(text=True)
-            target_text_final = ''.join(target_text_cleaner).encode('utf-8')
-            target_text_final = target_text_final.decode('utf-8') # Ugh, really?
-            target_text_final = unescape(target_text_final)
-            target_text_final = target_text_final.encode('utf-8')
+            target_text_cleaner = BeautifulSoup(target_text_clean, 'html.parser').findAll(text=True)
+            target_text_cleanest = ''.join(target_text_cleaner)
+            target_text_final = unescape(target_text_cleanest).encode('utf-8')
             twit_twats.append(target_text_final)
     if twit_twats:
         return twit_twats

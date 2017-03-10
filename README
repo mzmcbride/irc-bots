@@ -1,7 +1,3 @@
-IRC bots.
-
-Dependencies:
-* Python
-** Twisted framework (< https://twistedmatrix.com/ >)
+IRC bots written in Python.
 
 License information is available in the LICENSE file.
