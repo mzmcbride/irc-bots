@@ -56,8 +56,9 @@ import re
 import urllib
 import urllib2
 import json
-import BeautifulSoup
 import htmlentitydefs
+
+from bs4 import BeautifulSoup
 
 base_url = 'https://en.wikipedia.org'
 api_url = base_url+'/w/api.php'
@@ -201,7 +202,7 @@ def remove_sup(line):
 def format_line(line):
     #line = remove_sup(line)
     # Remove all HTML elements
-    line = ''.join(BeautifulSoup.BeautifulSoup(line).findAll(text=True))
+    line = ''.join(BeautifulSoup(line, 'html.parser').findAll(text=True))
     # Clean up any random entities and other bullshit
     line = unescape(line)
     return line
@@ -226,7 +227,7 @@ def guess_line(article):
         if debug:
             print parsed_page_section
         # Build a BeautifulSoup object
-        soup = BeautifulSoup.BeautifulSoup(parsed_page_section)
+        soup = BeautifulSoup(parsed_page_section, 'html.parser')
         # Kill all tables!
         for match in soup.findAll('table'):
             if debug:
@@ -253,7 +254,7 @@ def guess_line(article):
         clean_parsed_page_section = parsed_page_section.replace('\n', '')
 
         # Now iterate through the 'p' elements and try to grab the appropriate one
-        soup2 = BeautifulSoup.BeautifulSoup(clean_parsed_page_section)
+        soup2 = BeautifulSoup(clean_parsed_page_section, 'html.parser')
         if debug:
             print soup2
         for p in soup2.findAll('p'):
