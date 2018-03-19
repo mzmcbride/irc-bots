@@ -283,7 +283,7 @@ def guess_line(article):
         target_paragraph = first_parsed_paragraph
         if debug:
             print target_paragraph
-        clean_target_paragraph = ''.join(BeautifulSoup.BeautifulSoup(first_parsed_paragraph).findAll(text=True))
+        clean_target_paragraph = ''.join(BeautifulSoup(first_parsed_paragraph, 'html.parser').findAll(text=True))
         if search_initial_bold(article, target_paragraph):
             if debug:
                 print 'success?'
