@@ -114,7 +114,7 @@ def encode_urls(urls):
             # We don't want to encode every period, just trailing anchor periods.
             if re.search('#', encoded_url):
                 trailing_anchor_periods = re.match(r'(\.*)', encoded_url[::-1], re.I|re.U)
-                for k,v in period_dict.items():
+                for k, v in period_dict.items():
                     encoded_url = encoded_url.rstrip('.') + re.sub(k, v, trailing_anchor_periods.group(1))
             # If nothing changed, don't append. Otherwise, strip the prepended
             # marker and append!
@@ -129,7 +129,7 @@ def encode_urls(urls):
             # We don't want to encode every period, just trailing anchor periods.
             if re.search('#', encoded_url):
                 trailing_anchor_periods = re.match(r'(\.*)', url[::-1], re.I|re.U)
-                for k,v in period_dict.items():
+                for k, v in period_dict.items():
                     encoded_url = encoded_url.rstrip('.') + re.sub(k, v, trailing_anchor_periods.group(1))
             if url != encoded_url:
                 encoded_urls.append(encoded_url)
