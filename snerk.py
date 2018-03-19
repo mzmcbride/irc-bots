@@ -302,6 +302,34 @@ def get_twit_twats(urls):
         return twit_twats
     return False
 
+def get_mast_toots(urls):
+    # This function takes a list of URLs and fetches their respective
+    # messages if possible. This function can return a list of messages.
+
+    mast_toots = []
+    sites = [r'mastodon\.technology']
+    https_toot_find_re = re.compile(r'https://(%s)' % '|'.join(sites), re.I|re.U)
+    for url in urls:
+        url = url.lstrip('^')
+        if https_toot_find_re.search(url):
+            # https://mastodon.technology/@legoktm/99668580131269588
+            # https://mastodon.technology/@legoktm/99635890120340359
+            page_contents = urllib.urlopen(url).read()
+            soup = BeautifulSoup(page_contents, 'html.parser')
+            target_text = soup.find('meta', property='og:description')
+            if not target_text:
+                # Fuck it, continue
+                continue
+            target_text = target_text['content']
+            target_text_clean = re.sub(r'\s+', ' ', target_text).strip()
+            target_text_cleaner = BeautifulSoup(target_text_clean, 'html.parser').findAll(text=True)
+            target_text_cleanest = ''.join(target_text_cleaner)
+            target_text_final = target_text_cleanest.encode('utf-8')
+            mast_toots.append(target_text_final)
+    if mast_toots:
+        return mast_toots
+    return False
+
 class snerkBot(irc.IRCClient):
     realname = 'snerk'
     nickname = 'snerk'
@@ -370,6 +398,7 @@ class snerkBot(irc.IRCClient):
                 encoded_urls = encode_urls(urls)
                 url_titles = get_url_titles(urls)
                 twit_twats = get_twit_twats(urls)
+                mast_toots = get_mast_toots(urls)
                 if encoded_urls:
                     for url in encoded_urls:
                         self.msg(channel, url)
@@ -379,6 +408,9 @@ class snerkBot(irc.IRCClient):
                 elif twit_twats:
                     for twit_twat in twit_twats:
                         self.msg(channel, twit_twat)
+                elif mast_toots:
+                    for mast_toot in mast_toots:
+                        self.msg(channel, mast_toot)
         self.first_time = False
         return
 
@@ -558,6 +590,7 @@ class snerkBot(irc.IRCClient):
                 encoded_urls = encode_urls(urls)
                 url_titles = get_url_titles(urls)
                 twit_twats = get_twit_twats(urls)
+                mast_toots = get_mast_toots(urls)
                 if encoded_urls:
                     for url in encoded_urls:
                         self.msg(channel, url)
@@ -569,6 +602,10 @@ class snerkBot(irc.IRCClient):
                 elif twit_twats:
                     for twit_twat in twit_twats:
                         self.msg(channel, twit_twat)
+                        return
+                elif mast_toots:
+                    for mast_toot in mast_toots:
+                        self.msg(channel, mast_toot)
                         return
 
         elif channel.lower() == '#mediawiki-scripts':
