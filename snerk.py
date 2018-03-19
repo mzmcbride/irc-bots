@@ -96,7 +96,12 @@ def encode_urls(urls):
     # If the URL is unchanged, it will not be appended to the encoded_urls list.
     encoded_urls = []
     # These keys will be passed to re.sub, so escape properly!
-    parentheses_dict = { '\(' : '%28', '\)' : '%29' }
+    brackets_dict = {
+        '\(' : '%28',
+        '\)' : '%29',
+        '\[' : '%5B',
+        '\]' : '%5D',
+    }
     period_dict = { '\.' : '%2E' }
     for url in urls:
         # This is a URL that was at the beginning of a line; treat it a bit
@@ -104,7 +109,7 @@ def encode_urls(urls):
         if url.startswith('^'):
             # This is important.
             encoded_url = url
-            for k,v in parentheses_dict.items():
+            for k, v in brackets_dict.items():
                 encoded_url = re.sub(k, v, encoded_url)
             # We don't want to encode every period, just trailing anchor periods.
             if re.search('#', encoded_url):
@@ -115,9 +120,9 @@ def encode_urls(urls):
             # marker and append!
             if url != encoded_url:
                 encoded_urls.append(encoded_url.lstrip('^'))
-        elif re.search(r'(\(|#)', url, re.I|re.U):
+        elif re.search(r'(\(|#|\[)', url, re.I|re.U):
             encoded_url = url
-            for k,v in parentheses_dict.items():
+            for k, v in brackets_dict.items():
                 encoded_url = re.sub(k, v, encoded_url)
             if re.search(r'%29%29$', encoded_url, re.I|re.U): # Awful hack.
                 encoded_url = re.sub('%29%29', '%29', encoded_url)
