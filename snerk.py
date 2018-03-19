@@ -210,6 +210,9 @@ def get_url_titles(urls):
                         pass
                     else:
                         continue
+                # urllib is getting a "400 Bad Request" response with URLs
+                # that contain anchors :-(
+                url = url.split('#', 1)[0]
                 response = urllib.urlopen(url).read()
                 soup = BeautifulSoup(response, 'html.parser')
                 title_tag_text = soup.html.head.title.string
