@@ -586,6 +586,11 @@ class snerkBot(irc.IRCClient):
             self.msg(channel, 'Pfft.')
             return
 
+        greetingfind = re.search(r'((hi+|hello|hey+|greetings)[, ]*)%s' % self.nickname, msg, re.I|re.U)
+        if greetingfind:
+            self.msg(channel, greetingfind.group(1)[0].upper() + greetingfind.group(1)[1:] + '%s.' % user)
+            return
+
         return
 
     def action(self, user, channel, msg):
