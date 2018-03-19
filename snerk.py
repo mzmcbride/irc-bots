@@ -170,6 +170,7 @@ def get_url_titles(urls):
              r'youtube\.com',
              r'youtu\.be',
              r'xkcd\.com',
+             r'npr\.org',
              r'nytimes\.com',
              r'vimeo\.com',
              r'bbc(\.com|\.co\.uk)',
