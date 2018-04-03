@@ -307,13 +307,13 @@ def get_mast_toots(urls):
     # messages if possible. This function can return a list of messages.
 
     mast_toots = []
-    sites = [r'mastodon\.technology']
-    https_toot_find_re = re.compile(r'https://(%s)' % '|'.join(sites), re.I|re.U)
     for url in urls:
         url = url.lstrip('^')
-        if https_toot_find_re.search(url):
+        if url.find('@') != -1:
             # https://mastodon.technology/@legoktm/99668580131269588
             # https://mastodon.technology/@legoktm/99635890120340359
+            # https://social.coop/@eloquence/99786019927660750
+            # https://medium.com/@icelevel/whos-left-mariame-26ed2237ada6
             page_contents = urllib.urlopen(url).read()
             soup = BeautifulSoup(page_contents, 'html.parser')
             target_text = soup.find('meta', property='og:description')
