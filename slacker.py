@@ -256,6 +256,8 @@ def get_twit_twats(urls):
             # https://twitter.com/#!/jemmabetts
             # https://twitter.com/Dominic_MP/status/211174413805174784
             # https://twitter.com/drewtoothpaste/status/313418036218585088
+            # https://twitter.com/kylegriffin1/status/1025166892468789248
+            # https://twitter.com/originalspin/status/1025162025981239297?s=19
             page_contents = urllib.urlopen(url).read()
             soup = BeautifulSoup(page_contents, 'html.parser')
             target_text = soup.find('span', 'entry-content')
@@ -269,7 +271,8 @@ def get_twit_twats(urls):
             target_text_cleaner = BeautifulSoup(target_text_clean, 'html.parser').findAll(text=True)
             target_text_cleanest = ''.join(target_text_cleaner)
             target_text_tweaked = target_text_cleanest.replace('pic.twitter.com/', ' https://pic.twitter.com/')
-            target_text_final = unescape(target_text_tweaked).encode('utf-8')
+            target_text_freer_urls = re.sub(r'([^ ])(https?://)', '\g<1> \g<2>', target_text_tweaked)
+            target_text_final = unescape(target_text_freer_urls).encode('utf-8')
             twit_twats.append(target_text_final)
     if twit_twats:
         return twit_twats
