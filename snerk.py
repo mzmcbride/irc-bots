@@ -284,11 +284,23 @@ def get_twit_twats(urls):
             # https://twitter.com/#!/jemmabetts
             # https://twitter.com/Dominic_MP/status/211174413805174784
             # https://twitter.com/drewtoothpaste/status/313418036218585088
+            # https://twitter.com/kylegriffin1/status/1025166892468789248
+            # https://twitter.com/originalspin/status/1025162025981239297?s=19
+            # https://twitter.com/MurderBryan/status/1025092449105047552
+            # https://twitter.com/boomerprn/status/1024619016248119296
+            # https://twitter.com/hannahmosk/status/1024373987051282433
+            # https://twitter.com/hannahmosk/status/1024374065145020416
+            # https://twitter.com/thisisanerrorpage
             page_contents = urllib.urlopen(url).read()
             soup = BeautifulSoup(page_contents, 'html.parser')
             target_text = soup.find('span', 'entry-content')
             if not target_text:
-                target_text = soup.find('p', 'js-tweet-text')
+                target_text_options = soup.find_all('p', 'js-tweet-text')
+                for e, t in enumerate(target_text_options):
+                    if 'TweetTextSize--jumbo' in t['class']:
+                        target_text = target_text_options[e]
+                if not target_text and target_text_options:
+                    target_text = target_text_options[0]
             if not target_text:
                 # Fuck it, continue
                 continue
@@ -296,7 +308,11 @@ def get_twit_twats(urls):
             target_text_clean = re.sub(r'\s+', ' ', target_text).strip()
             target_text_cleaner = BeautifulSoup(target_text_clean, 'html.parser').findAll(text=True)
             target_text_cleanest = ''.join(target_text_cleaner)
-            target_text_final = unescape(target_text_cleanest).encode('utf-8')
+            target_text_tweaked = target_text_cleanest.replace('pic.twitter.com/', ' https://pic.twitter.com/')
+            target_text_freer_urls = re.sub(r'([^ ])(https?://)', '\g<1> \g<2>', target_text_tweaked)
+            # Strip again to account for only photos (leading space such as
+            # " https://pic.twitter.com...")
+            target_text_final = unescape(target_text_freer_urls).encode('utf-8').strip()
             twit_twats.append(target_text_final)
     if twit_twats:
         return twit_twats
